@@ -14,10 +14,6 @@ spec:
       labels:
         app.kubernetes.io/name: esphome-fleet
     spec:
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
       containers:
         - name: esphome-fleet
           image: ghcr.io/weirded/esphome-dist-client:1.7.0
