@@ -1,10 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: esphome-fleet-headless
+  labels:
+    app.kubernetes.io/name: esphome-fleet
+spec:
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: esphome-fleet
+
+---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: esphome-fleet
   labels:
     app.kubernetes.io/name: esphome-fleet
 spec:
+  serviceName: esphome-fleet-headless
   replicas: 2
   selector:
     matchLabels:
@@ -19,7 +32,6 @@ spec:
           image: ghcr.io/weirded/esphome-dist-client:1.7.0
           imagePullPolicy: IfNotPresent
           env:
-            # App secret (created separately; not committed)
             - name: SERVER_URL
               valueFrom:
                 secretKeyRef:
@@ -36,12 +48,16 @@ spec:
               value: "4"
             - name: ESPHOME_SEED_VERSION
               value: "2026.4.4"
-
           volumeMounts:
             - name: esphome-fleet-worker
               mountPath: /esphome-versions
-
-      volumes:
-        - name: esphome-fleet-worker
-          persistentVolumeClaim:
-            claimName: esphome-fleet-worker-pvc
+  volumeClaimTemplates:
+    - metadata:
+        name: esphome-fleet-worker
+      spec:
+        storageClassName: longhorn
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 20Gi
