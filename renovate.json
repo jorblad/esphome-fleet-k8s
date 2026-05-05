@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^k8s/deployment\\.yaml$"],
+      "matchStrings": [
+        "- name: ESPHOME_SEED_VERSION\\s+value: \"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "esphome",
+      "datasourceTemplate": "pypi"
+    }
+  ]
+}
