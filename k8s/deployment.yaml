@@ -47,7 +47,7 @@ spec:
             - name: MAX_PARALELL_JOBS
               value: "4"
             - name: ESPHOME_SEED_VERSION
-              value: "2026.5.3"
+              value: "2026.6.0"
           volumeMounts:
             - name: esphome-fleet-worker
               mountPath: /esphome-versions
